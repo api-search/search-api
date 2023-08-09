@@ -52,8 +52,8 @@ exports.handler = vandium.generic()
         if(error){
 
           let response = {};
-          response.sql = sql;
-          response.sql2 = sql2;
+          //response.sql = sql;
+          //response.sql2 = sql2;
           response.error = error;
           
           callback( null, response );
@@ -124,8 +124,8 @@ exports.handler = vandium.generic()
           }
     
           let response = {};
-          response.sql = sql;
-          response.sql2 = sql2;
+          //response.sql = sql;
+          //response.sql2 = sql2;
           response.meta = meta;
           response.data = data;
           response.links = links;
