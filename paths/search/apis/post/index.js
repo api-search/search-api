@@ -22,12 +22,12 @@ exports.handler = vandium.generic()
         var created = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
       
         // If valid then lets insert for processing
-        var sql = "SELECT * FROM openapi WHERE url = " + connection.escape(event.url);
+        var sql = "SELECT * FROM apisjson WHERE url = " + connection.escape(event.url);
         connection.query(sql, function (error, results, fields) {   
           
           if(results && results.length == 0){
             
-            var sql2 = "INSERT INTO openapi(url,created,modified) VALUES(" + connection.escape(event.url) + ",'" + created + "','" + created + "')";
+            var sql2 = "INSERT INTO apisjson(url,created,modified) VALUES(" + connection.escape(event.url) + ",'" + created + "','" + created + "')";
             connection.query(sql2, function (error, results, fields) {
         
               if(results.affectedRows && results.affectedRows > 0){

@@ -29,7 +29,7 @@ exports.handler = vandium.generic()
       limit = 1000;
     }
 
-    var sql = "SELECT count(*) as api_count FROM apis b WHERE ID IS NOT NULL";
+    var sql = "SELECT count(*) as api_count FROM apis a WHERE a.id IS NOT NULL";
     
     var sql_search = '';
     if(search != ''){
