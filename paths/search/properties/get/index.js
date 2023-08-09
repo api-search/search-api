@@ -34,7 +34,7 @@ exports.handler = vandium.generic()
      
       const api_count = 0;
     
-      let sql2 = "SELECT a.name,a.description,a.image,a.baseURL,a.humanURL,a.openapi_url,a.tags,GROUP_CONCAT(CONCAT(p.type,'~', p.url)) as properties FROM apis a INNER JOIN properties m ON a.baseURL = m.api_base_url INNER JOIN properties p ON a.baseURL = p.api_base_url WHERE m.type LIKE '%" + property + "%' GROUP BY a.name LIMIT " + page + "," + limit;
+      let sql2 = "SELECT a.name,a.description,a.image,a.baseURL,a.humanURL,a.apisjson_url,a.tags,GROUP_CONCAT(CONCAT(p.type,'~', p.url)) as properties FROM apis a INNER JOIN properties m ON a.baseURL = m.api_base_url INNER JOIN properties p ON a.baseURL = p.api_base_url WHERE m.type LIKE '%" + property + "%' GROUP BY a.name LIMIT " + page + "," + limit;
       connection.query(sql2, function (error, results2, fields) {
         
         let total_pages = api_count/limit;
