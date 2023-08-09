@@ -100,8 +100,11 @@ exports.handler = vandium.generic()
               d.tags = "";
             }
             
-            let blob = results2[i].properties;
-            let properties = blob.split(",");
+            let properties = [];
+            if(results2[i].properties){
+              let blob = results2[i].properties;
+              properties = blob.split(",");
+            }
             
             let return_properties = [];
             for (let j = 0; j < properties.length; j++) {
