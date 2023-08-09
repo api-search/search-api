@@ -77,10 +77,18 @@ exports.handler = vandium.generic()
           d.image = results2[i].image;
           d.baseURL = results2[i].baseURL;
           d.humanURL = results2[i].humanURL;
-          d.tags = results2[i].tags.split(",");
+          if(results2[i].tags){
+            d.tags = results2[i].tags.split(",");
+          }
+          else{
+            d.tags = "";
+          }
           
-          let blob = results2[i].properties;
-          let properties = blob.split(",");
+          let properties = [];
+          if(results2[i].properties){
+            let blob = results2[i].properties;
+            properties = blob.split(",");
+          }
           
           let return_properties = [];
           for (let j = 0; j < properties.length; j++) {
