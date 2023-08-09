@@ -27,16 +27,20 @@ exports.handler = vandium.generic()
           
           if(results && results.length == 0){
             
-            var sql = "INSERT INTO openapi(url,created,modified) VALUES(" + connection.escape(event.url) + ",'" + created + "','" + created + "')";
-            connection.query(sql, function (error, results, fields) {
+            var sql2 = "INSERT INTO openapi(url,created,modified) VALUES(" + connection.escape(event.url) + ",'" + created + "','" + created + "')";
+            connection.query(sql2, function (error, results, fields) {
         
               if(results.affectedRows && results.affectedRows > 0){
                 var response = {};
+                response.sql = sql;
+                response.sql2 = sql2;
                 response['response'] = "Added for processing.";            
                 callback( null, response );
               }
               else{
                 var response = {};
+                response.sql = sql;
+                response.sql2 = sql2;                
                 response['response'] = "Problem adding to queue..";            
                 callback( null, response );            
               }
@@ -46,6 +50,7 @@ exports.handler = vandium.generic()
           }
           else{
             var response = {};
+            response.sql = sql;
             response['response'] = "Already in there..";            
             callback( null, response );              
           }
