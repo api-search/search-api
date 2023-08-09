@@ -1,0 +1,119 @@
+name: Build API  
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+
+  deploy_source:
+
+    name: Deploy API Using AWS Lambda
+    strategy:
+      matrix:
+        node-version: [12.x]
+    runs-on: ubuntu-latest
+    steps:
+    
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install and build
+        run: |
+          npm install
+          npm ci
+          npm run build --if-present
+        env:
+          CI: true
+
+      # Dynamic below here
+      - name: /search/apis get lambda deploy zip
+        uses: api-search/search-api@main
+        with:
+          args: zip -qq -r m-s-apis-io-searchapis-g.zip paths/search/apis/get/index.js node_modules
+      - name: videos get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_region: us-east-1
+          function_name: m-s-apis-io-searchapis-g
+          zip_file: m-s-apis-io-searchapis-g.zip
+      - name: /search/apis post lambda deploy zip
+        uses: api-search/search-api@main
+        with:
+          args: zip -qq -r m-s-apis-io-searchapis-po.zip paths/search/apis/post/index.js node_modules
+      - name: videos get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_region: us-east-1
+          function_name: m-s-apis-io-searchapis-po
+          zip_file: m-s-apis-io-searchapis-po.zip
+      - name: /search/maintainers get lambda deploy zip
+        uses: api-search/search-api@main
+        with:
+          args: zip -qq -r m-s-apis-io-searchmaintainers-g.zip paths/search/maintainers/get/index.js node_modules
+      - name: videos get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_region: us-east-1
+          function_name: m-s-apis-io-searchmaintainers-g
+          zip_file: m-s-apis-io-searchmaintainers-g.zip
+      - name: /search/properties get lambda deploy zip
+        uses: api-search/search-api@main
+        with:
+          args: zip -qq -r m-s-apis-io-searchproperties-g.zip paths/search/properties/get/index.js node_modules
+      - name: videos get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_region: us-east-1
+          function_name: m-s-apis-io-searchproperties-g
+          zip_file: m-s-apis-io-searchproperties-g.zip
+      - name: /search/tags get lambda deploy zip
+        uses: api-search/search-api@main
+        with:
+          args: zip -qq -r m-s-apis-io-searchtags-g.zip paths/search/tags/get/index.js node_modules
+      - name: videos get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_region: us-east-1
+          function_name: m-s-apis-io-searchtags-g
+          zip_file: m-s-apis-io-searchtags-g.zip      

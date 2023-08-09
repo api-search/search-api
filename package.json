@@ -1,0 +1,20 @@
+{
+  "name": "apis-io-api",
+  "version": "1.0.0",
+  "description": "This is the API for the APIs.io search engine.",
+  "main": "dist/core.js",
+  "types": "dist/core.d.ts",
+  "dependencies": {
+    "async": "*",
+    "aws-sdk": "^2.1430.0",
+    "js-yaml": "^4.1.0",
+    "mysql": "*",
+    "pool": "*",
+    "typescript": "^4.5.2",
+    "vandium": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.8",
+    "serverless-prune-plugin": "^2.0.2"
+  }
+}
