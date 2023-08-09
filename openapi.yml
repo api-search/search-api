@@ -11,7 +11,7 @@ info:
     email: info@apievangelist.com
 
 servers:
-  - url: https://dqkupdnj9l.execute-api.us-east-1.amazonaws.com/staging    
+  - url: https://ibmwu99rx3.execute-api.us-east-1.amazonaws.com/staging  
 
 tags:
 

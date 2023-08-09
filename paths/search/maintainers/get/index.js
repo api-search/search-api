@@ -29,12 +29,12 @@ exports.handler = vandium.generic()
       limit = 1000;
     }
 
-    var sql = "SELECT count(*) as api_count FROM apis a INNER JOIN maintainers m ON a.apisjson_url = m.apisjson_url WHERE m.FN LIKE '%" + maintainer + "%' OR m.name LIKE '%" + maintainer + "%'";
+    var sql = "SELECT count(*) as api_count FROM apis a LEFT JOIN maintainers m ON a.apisjson_url = m.apisjson_url WHERE m.FN LIKE '%" + maintainer + "%' OR m.name LIKE '%" + maintainer + "%'";
     connection.query(sql, function (error, results1, fields) { 
       
       const api_count = results1[0].api_count;
     
-      let sql2 = "SELECT a.name,a.description,a.image,a.baseURL,a.humanURL,a.apisjson_url,a.tags,GROUP_CONCAT(CONCAT(p.type,'~', p.url)) as properties FROM apis a INNER JOIN maintainers m ON a.apisjson_url = m.apisjson_url INNER JOIN properties p ON a.baseURL = p.api_base_url WHERE m.FN LIKE '%" + maintainer + "%' OR m.name LIKE '%" + maintainer + "%' GROUP BY a.name LIMIT " + page + "," + limit;
+      let sql2 = "SELECT a.name,a.description,a.image,a.baseURL,a.humanURL,a.apisjson_url,a.tags,GROUP_CONCAT(CONCAT(p.type,'~', p.url)) as properties FROM apis a LEFT JOIN maintainers m ON a.apisjson_url = m.apisjson_url LEFT JOIN properties p ON a.baseURL = p.api_base_url WHERE m.FN LIKE '%" + maintainer + "%' OR m.name LIKE '%" + maintainer + "%' GROUP BY a.name LIMIT " + page + "," + limit;
       
       connection.query(sql2, function (error, results2, fields) {
   

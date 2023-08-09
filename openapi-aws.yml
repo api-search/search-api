@@ -4,7 +4,7 @@ info:
   description: This is the APIs.io API Search API.
   version: V1
 servers:
-- url: https://6lmdrlqfjj.execute-api.us-east-1.amazonaws.com/staging
+- url: https://ibmwu99rx3.execute-api.us-east-1.amazonaws.com/staging
 paths:
   /search/apis:
     get:
