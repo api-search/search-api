@@ -38,7 +38,7 @@ exports.handler = vandium.generic()
        sql_search += " OR a.tags LIKE '%" + search + "%')";
     }
 
-    sql =+ sql_search;
+    sql = sql + sql_search;
     
     connection.query(sql, function (error, results1, fields) { 
       
