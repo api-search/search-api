@@ -42,7 +42,8 @@ exports.handler = vandium.generic()
     
     connection.query(sql, function (error, results1, fields) { 
       
-      const api_count = results1[0].api_count;
+      //const api_count = results1[0].api_count;
+      const api_count = 0;
     
       let sql2 = "SELECT a.name,a.description,a.image,a.baseURL,a.humanURL,a.apisjson_url,a.tags,GROUP_CONCAT(CONCAT(p.type,'~', p.url)) as properties FROM apis a LEFT JOIN properties p ON a.baseURL = p.api_base_url WHERE a.id IS NOT NULL" + sql_search + " GROUP BY a.name LIMIT " + page + "," + limit;
       
@@ -115,6 +116,8 @@ exports.handler = vandium.generic()
           }
     
           let response = {};
+          response.sql = sql;
+          response.sql2 = sql2;
           response.meta = meta;
           response.data = data;
           response.links = links;
