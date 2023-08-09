@@ -46,67 +46,80 @@ exports.handler = vandium.generic()
       
       connection.query(sql2, function (error, results2, fields) {
   
-        let total_pages = api_count/limit;
-        if(total_pages<1){ total_pages = 1; }
-        total_pages = Math.round(total_pages);
-        
-        let meta = {};
-        meta.search = search;
-        meta.limit = limit;
-        meta.page = page;
-        //meta.sql = sql2;
-        meta.totalPages = total_pages;
-        
-        let links = {};
-        links.self = '/search/apis/?search=' + search + '&page=' + page + '&limit=' + limit;
-        if(page!=0){
-          links.first = '/search/apis/?search=' + search + '&page=-0&limit=' + limit;
-          links.prev = '/search/apis/?search=' + search + '&page=' + page-1 + '&limit=' + limit;
-        }
-        
-        if(total_pages > 1){
-          links.next = '/search/apis/?search=' + search + '&page=' + page+1 + '&limit=' + limit;
-        }
-        links.last = '/search/apis/?search=' + search + '&page=' + total_pages + '&limit=' + limit;
-  
-        let data = [];
-        for (let i = 0; i < results2.length; i++) {
-        
-          let d = {};
-          d.name = results2[i].name;
-          d.description = results2[i].description;
-          d.image = results2[i].image;
-          d.baseURL = results2[i].baseURL;
-          d.humanURL = results2[i].humanURL;
-          d.tags = results2[i].tags.split(",");
+        if(error){
+
+          let response = {};
+          response.sql = sql;
+          response.sql2 = sql2;
+          response.error = error;
           
-          let blob = results2[i].properties;
-          let properties = blob.split(",");
+          callback( null, response );
+
+        }
+        else{
+
+          let total_pages = api_count/limit;
+          if(total_pages<1){ total_pages = 1; }
+          total_pages = Math.round(total_pages);
           
-          let return_properties = [];
-          for (let j = 0; j < properties.length; j++) {
-            
-            let p_array = properties[j].split("~");
-            
-            let p = {};
-            p.type = p_array[0];
-            p.url = p_array[1];
-            return_properties.push(p);
-            
+          let meta = {};
+          meta.search = search;
+          meta.limit = limit;
+          meta.page = page;
+          //meta.sql = sql2;
+          meta.totalPages = total_pages;
+          
+          let links = {};
+          links.self = '/search/apis/?search=' + search + '&page=' + page + '&limit=' + limit;
+          if(page!=0){
+            links.first = '/search/apis/?search=' + search + '&page=-0&limit=' + limit;
+            links.prev = '/search/apis/?search=' + search + '&page=' + page-1 + '&limit=' + limit;
           }
           
-          d.properties = return_properties;
-          data.push(d);
+          if(total_pages > 1){
+            links.next = '/search/apis/?search=' + search + '&page=' + page+1 + '&limit=' + limit;
+          }
+          links.last = '/search/apis/?search=' + search + '&page=' + total_pages + '&limit=' + limit;
+    
+          let data = [];
+          for (let i = 0; i < results2.length; i++) {
           
+            let d = {};
+            d.name = results2[i].name;
+            d.description = results2[i].description;
+            d.image = results2[i].image;
+            d.baseURL = results2[i].baseURL;
+            d.humanURL = results2[i].humanURL;
+            d.tags = results2[i].tags.split(",");
+            
+            let blob = results2[i].properties;
+            let properties = blob.split(",");
+            
+            let return_properties = [];
+            for (let j = 0; j < properties.length; j++) {
+              
+              let p_array = properties[j].split("~");
+              
+              let p = {};
+              p.type = p_array[0];
+              p.url = p_array[1];
+              return_properties.push(p);
+              
+            }
+            
+            d.properties = return_properties;
+            data.push(d);
+            
+          }
+    
+          let response = {};
+          response.meta = meta;
+          response.data = data;
+          response.links = links;
+          
+          callback( null, response );
         }
-  
-        let response = {};
-        response.meta = meta;
-        response.data = data;
-        response.links = links;
-        
-        callback( null, response );
-        
+
       });
     });
 });
