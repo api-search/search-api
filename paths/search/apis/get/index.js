@@ -89,7 +89,7 @@ exports.handler = vandium.generic()
           
             let d = {};
             d.name = results2[i].name;
-            d.rating = results2[i].rating;
+            d.score = results2[i].score;
             d.percentage = results2[i].percentage;
             d.description = results2[i].description;
             d.image = results2[i].image;
