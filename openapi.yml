@@ -2,8 +2,8 @@ openapi: 3.0.0
 
 info:
 
-  title: 'APIs.io API'
-  description: 'This is the public version of the APis.io API search engine, providing search, submission, and engine capabilities.'
+  title: 'APIs.io Search API'
+  description: 'This is the API behind the APIs.io search engine.'
   version: V1
 
   contact:
@@ -16,19 +16,7 @@ servers:
 tags:
 
   - name: Search
-    description: Search using the engine.
-  - name: Tags
-    description: The tags for the engine.       
-  - name: Properties
-    description: The properties for the engine.
-  - name: Maintainers
-    description: The maintainers for the engine.
-  - name: Rules
-    description: The rules for the engine.   
-  - name: Engine
-    description: The engine for search.     
-  - name: Publish
-    description: The publishing for the engine.        
+    description: Search using the engine.     
     
 paths:
 
