@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: APIs.io Search API
-  description: This is the APIs.io API Search API.
+  description: This is the API for searching the APIs published to the APIs.io API search engine.
   version: V1
 servers:
 - url: https://ibmwu99rx3.execute-api.us-east-1.amazonaws.com/staging

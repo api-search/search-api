@@ -94,7 +94,8 @@ exports.handler = vandium.generic()
             d.description = results2[i].description;
             d.image = results2[i].image;
             d.baseURL = results2[i].baseURL;
-            d.humanURL = results2[i].humanURL;
+            d.apisjson_url = results2[i].apisjson_url;
+
             if(results2[i].tags){
               d.tags = results2[i].tags.split(",");
             }
