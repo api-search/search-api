@@ -67,15 +67,15 @@ exports.handler = vandium.generic()
                 
                       if(results.affectedRows && results.affectedRows > 0){
                         var response = {};
-                        response.sql = sql;
-                        response.sql2 = sql2;
+                        //response.sql = sql;
+                        //response.sql2 = sql2;
                         response['response'] = "The APIs.json has been added for further processing.";            
                         callback( null, response );
                       }
                       else{
                         var response = {};
-                        response.sql = sql;
-                        response.sql2 = sql2;                
+                        //response.sql = sql;
+                        //response.sql2 = sql2;                
                         response['response'] = "There was a problem adding to queue..";            
                         callback( null, response );            
                       }
@@ -85,7 +85,7 @@ exports.handler = vandium.generic()
                   }
                   else{
                     var response = {};
-                    response.sql = sql;
+                    //response.sql = sql;
                     response['response'] = "APIs.json has already been indexed.";            
                     callback( null, response );              
                   }
@@ -96,7 +96,7 @@ exports.handler = vandium.generic()
 
             } catch (error) {
               var response = {};
-              response.sql = sql;
+              //response.sql = sql;
               response['response'] = "Sorry, not a valid APIs.json.";            
               callback( null, response );   
             }              
