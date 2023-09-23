@@ -18,7 +18,7 @@ exports.handler = vandium.generic()
       
       if(httpRegex.test(event.url)){ 
 
-        var apisjson_url = event.url);
+        var apisjson_url = event.url;
 
         https.get(apisjson_url, res => {
           
