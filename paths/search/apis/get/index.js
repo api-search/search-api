@@ -93,6 +93,7 @@ exports.handler = vandium.generic()
             d.percentage = results2[i].percentage;
             d.description = results2[i].description;
             d.image = results2[i].image;
+            d.humanURL = results2[i].humanURL;
             d.baseURL = results2[i].baseURL;
             d.apisjson_url = results2[i].apisjson_url;
 

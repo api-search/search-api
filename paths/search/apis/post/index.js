@@ -76,7 +76,7 @@ exports.handler = vandium.generic()
                         var response = {};
                         //response.sql = sql;
                         //response.sql2 = sql2;                
-                        response['response'] = "There was a problem adding to queue..";            
+                        response['response'] = "There was a problem adding to queue.";            
                         callback( null, response );            
                       }
                 
