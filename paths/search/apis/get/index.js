@@ -89,10 +89,11 @@ exports.handler = vandium.generic()
           for (let i = 0; i < results2.length; i++) {
           
             let d = {};
-            d.name = results2[i].name;
+            d.name = results2[i].name2;
+            d.slug = results2[i].slug2;
             d.score = results2[i].score;
             d.percentage = results2[i].percentage;
-            d.description = results2[i].description;
+            d.description = results2[i].description2;
             d.image = results2[i].image;
             d.humanURL = results2[i].humanURL;
             d.baseURL = results2[i].baseURL;
