@@ -45,8 +45,9 @@ exports.handler = vandium.generic()
       const api_count = results1[0].api_count;
       //const api_count = 0;
     
-      let sql2 = "SELECT a.name,a.description,a.image,a.baseURL,a.humanURL,a.apisjson_url,a.tags,(select score from apisjson aj WHERE aj.url = a.apisjson_url) as score,(select percentage from apisjson aj WHERE aj.url = a.apisjson_url) as percentage,GROUP_CONCAT(CONCAT(p.type,'~', p.url)) as properties FROM apis a LEFT JOIN properties p ON a.baseURL = p.api_base_url WHERE a.id IS NOT NULL" + sql_search + " GROUP BY a.name LIMIT " + page + "," + limit;
-      
+      //let sql2 = "SELECT a.name,a.description,a.image,a.baseURL,a.humanURL,a.apisjson_url,a.tags,(select score from apisjson aj WHERE aj.url = a.apisjson_url) as score,(select percentage from apisjson aj WHERE aj.url = a.apisjson_url) as percentage,GROUP_CONCAT(CONCAT(p.type,'~', p.url)) as properties FROM apis a LEFT JOIN properties p ON a.baseURL = p.api_base_url WHERE a.id IS NOT NULL" + sql_search + " GROUP BY a.name LIMIT " + page + "," + limit;
+      let sql2 = "select a.name,ao.name as name2,a.slug,ao.slug as slug2,a.description,ao.description AS description2,a.image,ao.image AS image2,a.baseURL,a.humanURL,a.apisjson_url,a.tags,a.published,(select name from apisjson_overlay aj WHERE aj.apisjson_url = a.apisjson_url) as indexName,(select score from apisjson aj WHERE aj.url = a.apisjson_url) as score,(select percentage from apisjson aj WHERE aj.url = a.apisjson_url) as percentage,(select rules from apisjson aj WHERE aj.url = a.apisjson_url) as rules FROM apis a LEFT JOIN apis_overlay ao ON a.humanURL = ao.humanURL WHERE a.id IS NOT NULL" + sql_search + " GROUP BY a.name LIMIT " + page + "," + limit;
+
       connection.query(sql2, function (error, results2, fields) {
   
         if(error){
