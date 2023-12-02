@@ -29,11 +29,11 @@ exports.handler = vandium.generic()
       limit = 1000;
     }
 
-    var sql = "INSERT INTO searches(search) VALUES(" + connection.escape(apisjson_url) + ")";
+    var sql = "INSERT INTO searches(search) VALUES(" + connection.escape(search) + ")";
     
     connection.query(sql, function (error, results1, fields) { 
 
-      
+
       var sql = "SELECT count(*) as api_count FROM apis a WHERE a.id IS NOT NULL";
       
       var sql_search = '';
