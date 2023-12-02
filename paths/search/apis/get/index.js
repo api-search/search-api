@@ -136,7 +136,7 @@ exports.handler = vandium.generic()
             response.data = data;
             response.links = links;
 
-            var sql = "INSERT INTO searches(search) VALUES(" + connection.escape(search) + ")";
+            var sql = "INSERT INTO searches(search,api_count) VALUES(" + connection.escape(search) + "," + api_count + ")";
     
             connection.query(sql, function (error, results1, fields) {             
             
