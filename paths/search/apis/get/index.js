@@ -128,16 +128,16 @@ exports.handler = vandium.generic()
               data.push(d);
               
             }
-      
-            var response = {};
-            //response.sql = sql;
-            //response.sql2 = sql2;
-            response.meta = meta;
-            response.data = data;
-            response.links = links;
 
             var sql = "INSERT INTO searches(search,api_count,sql) VALUES(" + connection.escape(search) + "," + api_count + "," + connection.escape(sql2) + ")";
-    
+
+            var response = {};
+            response.sql = sql;
+            response.sql2 = sql2;
+            response.meta = meta;
+            response.data = data;
+            response.links = links;            
+
             connection.query(sql, function (error, results1, fields) {             
             
               callback( null, response );
