@@ -29,19 +29,21 @@ exports.handler = vandium.generic()
       limit = 1000;
     }
 
-      var sql = "SELECT count(*) as api_count FROM apis a WHERE a.id IS NOT NULL";
-      
-      var sql_search = '';
-      if(search != ''){
-        sql_search = " AND (a.name LIKE '%" + search + "%'";
-        sql_search += " OR a.description LIKE '%" + search + "%'";
-        sql_search += " OR a.tags LIKE '%" + search + "%')";
-      }
+    var sql = "SELECT count(*) as api_count FROM apis a WHERE a.id IS NOT NULL";
+    
+    var sql_search = '';
+    if(search != ''){
+      sql_search = " AND (a.name LIKE '%" + search + "%'";
+      sql_search += " OR a.description LIKE '%" + search + "%'";
+      sql_search += " OR a.tags LIKE '%" + search + "%')";
+    }
 
-      sql = sql + sql_search;
+    sql = sql + sql_search;
+    
+    connection.query(sql, function (error, results1, fields) { 
       
-      connection.query(sql, function (error, results1, fields) { 
-        
+      if(results1[0]){
+          
         const api_count = results1[0].api_count;
         //const api_count = 0;
       
@@ -146,7 +148,25 @@ exports.handler = vandium.generic()
 
           }  
 
-      });
+        });
+
+      }
+      else{
+
+        let meta = {};
+        meta.search = search;
+        meta.limit = 0;
+        meta.page = 0;
+        meta.totalPages = 0;
+
+        var response = {};
+        response.meta = meta;
+        response.data = [];
+        response.links = {};        
+        
+        callback( null, response );        
+        
+      }
 
     });
 });
