@@ -1,0 +1,194 @@
+# APIs JSON/YAML Specification Details
+specificationVersion: '0.15'
+specificationType: 'Consumer'
+
+# Overview of this API
+name: APIs.io
+description: This a collection of designed for public developers building on the APIs.io API search engine APIs.
+image: https://kinlane-productions2.s3.amazonaws.com/apis-io/apis-io-api-logo.jpg
+
+# Tags for helping organize
+tags:
+
+  - APIs
+  - Search Engine
+  - Directory
+
+# Time frame for API evolution
+created: '2023-07-26'
+modified: '2023-08-23'  
+
+url: http://apis.io/apis-index.yml
+
+apis:
+
+  - name: Authentication API
+    description: This is the API for turning your GitHub Personal Access Token into an API key you can pass in to make API calls to the APIs.io API.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-io/apis-io-api-logo.jpg
+    humanURL: https://auth-docs.apis.io/
+    baseURL: https://auth-api.apis.io
+
+    maturity: 'Active'
+
+    access: 'Public'     
+    
+    tags:
+    
+      - Authentication
+      - Tokens
+    
+    properties:
+
+      # Documentation
+      - type: documentation
+        url: https://auth-docs.apis.io/
+
+      - type: openapi
+        url: https://auth-docs.apis.io/openapi.yml
+
+      # Deployment
+      - type: github-repository
+        url: 'https://github.com/api-search/authentication-api'
+
+      - type: github-action
+        url: 'https://github.com/api-search/authentication-api/actions'
+
+      - type: aws-api-gateway
+        url: 'https://us-east-1.console.aws.amazon.com/apigateway/main/apis/0d2ss3399l/resources'        
+
+    # VCard Contact 
+    contact:
+
+      - FN: APIs.io
+        email: info@apis.io  
+
+  - name: APIs.io Search API
+    description: This is the API behind the APIs.io search engine.
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-io/apis-io-api-logo.jpg
+    humanURL: https://search-docs.apis.io/
+    baseURL: http://search-api.apis.io
+
+    # Design
+    # Pre-Release    
+    # Active
+    # Recommended
+    # Retired
+    # Deprecated
+    maturity: 'Active'
+
+    # Public
+    # Partner
+    # Internal
+    # Group
+    # Team
+    access: 'Public'     
+    
+    tags:
+    
+      - APIs
+      - Search Engine
+      - Directory
+    
+    properties:
+
+      # Documentation
+      - type: documentation
+        url: https://search-docs.apis.io/
+
+      - type: postman-collection
+        url: https://www.postman.com/api-evangelist/workspace/
+
+      - type: openapi
+        url: https://search-docs.apis.io/openapi.yml 
+
+    # VCard Contact 
+    contact:
+
+      - FN: APIs.io
+        email: info@apis.io                 
+
+common:
+
+  # Workspaces
+  - type: postman-public-workspace
+    url: https://www.postman.com/api-evangelist/workspace/apis-io/overview        
+
+  - type: github-repository
+    url: 'https://github.com/apis-json/apis-io-api/issues' 
+
+
+  # Management
+  - type: api-getting-started
+    url: 'https://example.com/getting-started/'  
+
+  - type: api-plans
+    url: 'https://example.com/plans/'         
+
+  - type: api-authentication
+    url: http://example.com/authentication/             
+
+
+  # Change
+  - type: api-road-map
+    url: https://github.com/apis-json/apis-io-api/blob/main/road-map.md
+
+  - type: api-change-log
+    url: https://github.com/apis-json/apis-io-api/blob/main/change-log.md 
+
+
+  # Environments
+  - type: api-environment-sandbox
+    url: http://example.com/environment/sandbox/  
+
+  - type: api-environment-prduction
+    url: http://example.com/environment/production/                                                                                                         
+
+
+  # SDKs
+  - type: api-sdk-python
+    url: http://example.com/sdk/python/                        
+
+  - type: api-sdk-go
+    url: http://example.com/sdk/go/
+
+  - type: api-sdk-node
+    url: http://example.com/sdk/node/       
+
+  # Monitors
+  - type: api-uptime-monitor
+    url: 'https://example.com/uptime/monitor'   
+
+  # Communication
+  - type: blog
+    url: 'https://example.com/blog/' 
+
+  - type: videos
+    url: 'https://example.com/videos/'   
+
+
+  # Support
+  - type: support
+    url: 'https://example.com/support/'  
+
+  - type: issues
+    url: 'https://github.com/apis-json/apis-io-api/issues' 
+
+  - type: email
+    url: 'info@example.com'
+
+
+  # Legal
+  - type: api-terms-of-service
+    url: 'https://example.com/terms-of-service/' 
+    
+  - type: api-privacy-policy
+    url: 'https://example.com/privacy-policy/'                                               
+
+# Links to other related APIs.json
+include: []  
+
+# Who is maintaining this APIs.json
+maintainers:
+
+  - FN: APIs.io
+    email: info@apis.io
