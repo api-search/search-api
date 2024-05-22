@@ -1,8 +1,20 @@
 const vandium = require('vandium');
 const mysql  = require('mysql');
 const https  = require('https');
-const Ajv = require("ajv")
+const Ajv = require("ajv");
+const yaml = require('js-yaml');
 const ajv = new Ajv({allErrors: true,strict: false}) // options can be passed, e.g. {allErrors: true}
+
+function slugify(str) {
+  return String(str)
+      .normalize('NFKD') // split accented characters into their base characters and diacritical marks
+      .replace(/[\u0300-\u036f]/g, '') // remove all the accents, which happen to be all in the \u03xx UNICODE block.
+      .trim() // trim leading or trailing whitespace
+      .toLowerCase() // convert to lowercase
+      .replace(/[^a-z0-9 -]/g, '') // remove non-alphanumeric characters
+      .replace(/\s+/g, '-') // replace spaces with hyphens
+      .replace(/-+/g, '-'); // remove consecutive hyphens
+  }  
 
 exports.handler = vandium.generic()
   .handler( (event, context, callback) => {
@@ -36,70 +48,134 @@ exports.handler = vandium.generic()
             
             console.log('Response ended: ');
             
+            var contract_type = "":
             try {
+              const apisjson = JSON.parse(Buffer.concat(data).toString());              
+              contract_type = "JSON";
+            } catch (error) {}  
 
-              const apisjson = JSON.parse(Buffer.concat(data).toString());
-              
-              // validate
-              let schema = {"title":"A JSON Schema for apis.json, version 0.14","type":"object","additionalProperties":false,"patternProperties":{"^X-":{"type":"object"}},"definitions":{"maintainers":{"description":"The person or organization responsible for maintaining the API","required":["name"],"properties":{"name":{"type":"string","description":"name","minLength":5}},"additionalProperties":{"type":"string"}},"apis":{"description":"The description of the API","oneOf":[{"required":["name","description","image","baseURL","humanURL","properties","contact"],"properties":{"name":{"type":"string","description":"name","minLength":2},"description":{"type":"string","description":"description of the API","minLength":5},"image":{"type":"string","description":"URL of an image representing the API"},"baseURL":{"type":"string","pattern":"^(http)|(https)://(.*)$","description":"baseURL"},"humanURL":{"type":"string","pattern":"^(http)|(https)://(.*)$","description":"humanURL"},"tags":{"type":"array","items":{"type":"string","minLength":1},"description":"tags to describe the API"},"properties":{"type":"array","items":{"$ref":"#/definitions/urls"},"description":"URLs"},"contact":{"type":"array","items":{"$ref":"#/definitions/contact"},"description":"Contact to reach if questions about API"},"meta":{"type":"array","items":{"$ref":"#/definitions/metaInformation"}}}}]},"metaInformation":{"description":"Metadata about the API","required":["key","value"],"properties":{"key":{"type":"string"},"value":{"type":"string"}}},"contact":{"description":"Information on contacting the API support","required":["FN"],"additionalProperties":true,"patternProperties":{"^X-":{"type":"string"}},"properties":{"FN":{"type":"string","minLength":1},"email":{"type":"string"},"organizationName":{"type":"string"},"adr":{"type":"string"},"tel":{"type":"string"},"X-twitter":{"type":"string"},"X-github":{"type":"string"},"photo":{"type":"string","pattern":"^(http)|(https)://(.*)$"},"vCard":{"type":"string","pattern":"^(http)|(https)://(.*)$"},"url":{"type":"string","pattern":"^(http)|(https)://(.*)$"}}},"urls":{"description":"A representation of a URL","required":["type","url"],"properties":{"type":{"type":"string","pattern":"^(Swagger)$|^(RAML)$|^(Blueprint)$|^(WADL)$|^(WSDL)$|^(TermsOfService)$|^(InterfaceLicense)$|^(StatusPage)$|^(Pricing)$|^(Forums)$|^(AlertsTwitterHandle)$|^(X-[A-Za-z0-9\\-]*)$"},"url":{"type":"string","pattern":"^(http)|(https)://(.*)$"}}},"tags":{"description":"A consistent set of tag to apply to a description"},"include":{"description":"Include other APIs.json file","required":["name","url"],"properties":{"name":{"type":"string","minLength":1},"url":{"type":"string","pattern":"^(http)|(https)://(.*)$"}}}},"required":["name","description","url","apis","maintainers","tags"],"properties":{"name":{"type":"string","description":"The name of the service described","minLength":5},"description":{"type":"string","description":"Description of the service","minLength":5},"url":{"type":"string","description":"URL where the apis.json file will live","pattern":"^(http)|(https)://(.*)$"},"image":{"type":"string","description":"Image to represent the API"},"created":{"type":"string","description":"Date when the file was created"},"modified":{"type":"string","description":"Date when the file was modified"},"specificationVersion":{"type":"string","description":"APIs.json spec version, latest is 0.14"},"apis":{"type":"array","items":{"$ref":"#/definitions/apis"},"description":"All the APIs of this service"},"maintainers":{"type":"array","items":{"$ref":"#/definitions/contact"},"description":"Maintainers of the apis.json file"},"tags":{"type":"array","items":{"$ref":"#/definitions/tags"},"description":"Tags to describe the service"},"include":{"type":"array","items":{"$ref":"#/definitions/include"},"description":"Links to other apis.json definitions included in this service"}}};          
-              
-              const date = new Date();
-              var created = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();             
+            try {
+              const apisjson = yaml.load(Buffer.concat(data).toString());              
+              contract_type = "YAML";
+            } catch (error) {}              
+
+            // validate
+            let schema = {"title":"A JSON Schema for apis.json, version 0.14","type":"object","additionalProperties":false,"patternProperties":{"^X-":{"type":"object"}},"definitions":{"maintainers":{"description":"The person or organization responsible for maintaining the API","required":["name"],"properties":{"name":{"type":"string","description":"name","minLength":5}},"additionalProperties":{"type":"string"}},"apis":{"description":"The description of the API","oneOf":[{"required":["name","description","image","baseURL","humanURL","properties","contact"],"properties":{"name":{"type":"string","description":"name","minLength":2},"description":{"type":"string","description":"description of the API","minLength":5},"image":{"type":"string","description":"URL of an image representing the API"},"baseURL":{"type":"string","pattern":"^(http)|(https)://(.*)$","description":"baseURL"},"humanURL":{"type":"string","pattern":"^(http)|(https)://(.*)$","description":"humanURL"},"tags":{"type":"array","items":{"type":"string","minLength":1},"description":"tags to describe the API"},"properties":{"type":"array","items":{"$ref":"#/definitions/urls"},"description":"URLs"},"contact":{"type":"array","items":{"$ref":"#/definitions/contact"},"description":"Contact to reach if questions about API"},"meta":{"type":"array","items":{"$ref":"#/definitions/metaInformation"}}}}]},"metaInformation":{"description":"Metadata about the API","required":["key","value"],"properties":{"key":{"type":"string"},"value":{"type":"string"}}},"contact":{"description":"Information on contacting the API support","required":["FN"],"additionalProperties":true,"patternProperties":{"^X-":{"type":"string"}},"properties":{"FN":{"type":"string","minLength":1},"email":{"type":"string"},"organizationName":{"type":"string"},"adr":{"type":"string"},"tel":{"type":"string"},"X-twitter":{"type":"string"},"X-github":{"type":"string"},"photo":{"type":"string","pattern":"^(http)|(https)://(.*)$"},"vCard":{"type":"string","pattern":"^(http)|(https)://(.*)$"},"url":{"type":"string","pattern":"^(http)|(https)://(.*)$"}}},"urls":{"description":"A representation of a URL","required":["type","url"],"properties":{"type":{"type":"string","pattern":"^(Swagger)$|^(RAML)$|^(Blueprint)$|^(WADL)$|^(WSDL)$|^(TermsOfService)$|^(InterfaceLicense)$|^(StatusPage)$|^(Pricing)$|^(Forums)$|^(AlertsTwitterHandle)$|^(X-[A-Za-z0-9\\-]*)$"},"url":{"type":"string","pattern":"^(http)|(https)://(.*)$"}}},"tags":{"description":"A consistent set of tag to apply to a description"},"include":{"description":"Include other APIs.json file","required":["name","url"],"properties":{"name":{"type":"string","minLength":1},"url":{"type":"string","pattern":"^(http)|(https)://(.*)$"}}}},"required":["name","description","url","apis","maintainers","tags"],"properties":{"name":{"type":"string","description":"The name of the service described","minLength":5},"description":{"type":"string","description":"Description of the service","minLength":5},"url":{"type":"string","description":"URL where the apis.json file will live","pattern":"^(http)|(https)://(.*)$"},"image":{"type":"string","description":"Image to represent the API"},"created":{"type":"string","description":"Date when the file was created"},"modified":{"type":"string","description":"Date when the file was modified"},"specificationVersion":{"type":"string","description":"APIs.json spec version, latest is 0.14"},"apis":{"type":"array","items":{"$ref":"#/definitions/apis"},"description":"All the APIs of this service"},"maintainers":{"type":"array","items":{"$ref":"#/definitions/contact"},"description":"Maintainers of the apis.json file"},"tags":{"type":"array","items":{"$ref":"#/definitions/tags"},"description":"Tags to describe the service"},"include":{"type":"array","items":{"$ref":"#/definitions/include"},"description":"Links to other apis.json definitions included in this service"}}};          
             
-              let validate = ajv.compile(schema)
-              
-              const valid = validate(apisjson)
+            const date = new Date();
+            var created = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();             
+          
+            let validate = ajv.compile(schema)
+            
+            const valid = validate(apisjson);              
 
-              // override validation for now
-              if (!valid){
-        
-                const date = new Date();
-                var created = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-              
-                // If valid then lets insert for processing
-                var sql = "SELECT * FROM apisjson WHERE url = " + connection.escape(apisjson_url);
-                connection.query(sql, function (error, results, fields) {   
-                  
-                  if(results && results.length == 0){
-                    
-                    var sql2 = "INSERT INTO apisjson(url,created,modified) VALUES(" + connection.escape(apisjson_url) + ",'" + created + "','" + created + "')";
-                    connection.query(sql2, function (error, results, fields) {
-                
-                      if(results.affectedRows && results.affectedRows > 0){
-                        var response = {};
-                        //response.sql = sql;
-                        //response.sql2 = sql2;
-                        response['response'] = "The APIs.json has been added for further processing.";            
-                        callback( null, response );
+            // Valid
+            if(valid){
+
+              var api_name = apisjson.name;
+              var api_slug = slugify(api_name);
+
+              var path = '/repos/api-search/artisanal/contents/_apis/' + api_slug + '/apis.md';
+              const options = {
+                  hostname: 'api.github.com',
+                  method: 'GET',
+                  path: path,
+                  headers: {
+                    "Accept": "application/vnd.github+json",
+                    "User-Agent": "apis-io-search",
+                    "Authorization": 'Bearer ' + process.env.gtoken
+                }
+              };
+
+              https.get(options, (res) => {
+
+                  var body = '';
+                  res.on('data', (chunk) => {
+                      body += chunk;
+                  });
+
+                  res.on('end', () => {
+
+                    var github_results = JSON.parse(body);
+
+                    var sha = '';
+                    if(github_results.sha){
+                      sha = github_results.sha;
+                    }
+
+                    var api_yaml = '---\r\n' + yaml.dump(apisjson) + '---';
+
+                    var c = {};
+                    c.name = "Kin Lane";
+                    c.email = "kinlane@gmail.com";
+
+                    var m = {};
+                    m.message = 'Publishing APIs.json';
+                    m.committer = c;
+                    m.sha = sha;
+                    m.content = btoa(unescape(encodeURIComponent(api_yaml)));
+
+                    // Check from github
+                    var path = '/repos/api-search/artisanal/contents/_apis/' + api_slug + '/apis.md';          
+                    const options = {
+                        hostname: 'api.github.com',
+                        method: 'PUT',
+                        path: path,
+                        headers: {
+                          "Accept": "application/vnd.github+json",
+                          "User-Agent": "apis-io-search",
+                          "Authorization": 'Bearer ' + process.env.gtoken
                       }
-                      else{
-                        var response = {};
-                        //response.sql = sql;
-                        //response.sql2 = sql2;                
-                        response['response'] = "There was a problem adding to queue.";            
-                        callback( null, response );            
-                      }
-                
+                    };
+
+                    //console.log(options);
+
+                    var req = https.request(options, (res) => {
+
+                        let body = '';
+                        res.on('data', (chunk) => {
+                            body += chunk;
+                        });
+            
+                        res.on('end', () => {
+
+                        // Publish to Github  
+                        response['response'] = "It has been published to Artisanal!";            
+                        callback( null, response );                          
+
+                        });
+
+                        res.on('error', () => {
+
+                          var response = {};
+                          response['pulling'] = "Error writing to GitHub.";            
+                          callback( null, response );  
+                          connection.end();
+
+                        });
+
                     });
-                  
-                  }
-                  else{
+
+                  req.write(JSON.stringify(m));
+                  req.end();   
+
+                  });              
+
+                  res.on('error', () => {
+
                     var response = {};
-                    //response.sql = sql;
-                    response['response'] = "APIs.json has already been indexed.";            
-                    callback( null, response );              
-                  }
-                  
-                });  
+                    response['pulling'] = "Error reading from GitHub.";            
+                    callback( null, response );  
+                    connection.end();
+                  });
+
+                });                                
                 
               }
-
-            } catch (error) {
-              var response = {};
-              //response.sql = sql;
-              response['response'] = "Sorry, not a valid APIs.json.";            
-              callback( null, response );   
-            }              
+              else{
+                response['response'] = "Sorry, not a valid APIs.json.";            
+                callback( null, response );                   
+              }            
 
             });
           }).on('error', err => {
