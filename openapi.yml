@@ -128,11 +128,11 @@ components:
 
   requestBodies:
 
-    APIsJSON:
+    AddAPIsJSON:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/APIsJSON"
+            $ref: "#/components/schemas/AddAPIsJSON"
       required: true
 
     API:
