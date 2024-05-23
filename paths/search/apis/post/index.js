@@ -178,7 +178,7 @@ exports.handler = vandium.generic()
               }
               else{
                 var response = {};
-                response['response'] = "Sorry, not a valid APIs.json.";            
+                response['response'] = valid;            
                 callback( null, response );                   
               }            
 
