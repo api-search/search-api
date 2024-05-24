@@ -139,7 +139,8 @@ exports.handler = vandium.generic()
                     var response = {};
                     response['response'] = "It has been published to Artisanal! 123";            
                     response['path'] = url.hostname;
-                    response['pathname'] = url.pathname;                            
+                    response['pathname'] = url.pathname; 
+                    callback( null, response );                                     
 
                   }
                   else{
