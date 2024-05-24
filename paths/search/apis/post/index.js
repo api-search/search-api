@@ -148,6 +148,7 @@ exports.handler = vandium.generic()
                         response['response'] = "It has been published to Artisanal!";            
                         response['path'] = path;
                         response['options'] = options;
+                        response['body'] = body;                        
                         callback( null, response );                          
 
                         });
