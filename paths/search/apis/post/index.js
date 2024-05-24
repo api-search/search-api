@@ -94,14 +94,14 @@ exports.handler = vandium.generic()
 
               https.get(options, (res) => {
 
-                  var body = '';
+                  var body1 = '';
                   res.on('data', (chunk) => {
-                      body += chunk;
+                    body1 += chunk;
                   });
 
                   res.on('end', () => {
 
-                    var github_results = JSON.parse(body);
+                    var github_results = JSON.parse(body1);
 
                     var sha = '';
                     if(github_results.sha){
@@ -140,9 +140,9 @@ exports.handler = vandium.generic()
 
                     var req = https.request(options2, (res) => {
 
-                        let body = '';
+                        let body2 = '';
                         res.on('data', (chunk) => {
-                            body += chunk;
+                          body2 += chunk;
                         });
             
                         res.on('end', () => {
@@ -153,7 +153,8 @@ exports.handler = vandium.generic()
                         response['path'] = path;
                         response['options'] = options;
                         response['options2'] = options2;
-                        response['body'] = body;                        
+                        response['body1'] = body1;                        
+                        response['body2'] = body2; 
                         callback( null, response );                          
 
                         });
