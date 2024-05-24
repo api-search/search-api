@@ -161,7 +161,7 @@ exports.handler = vandium.generic()
                           var path = '/repos/apis-json/artisanal/issues';          
                           const options_issues = {
                               hostname: 'api.github.com',
-                              method: 'PUT',
+                              method: 'POST',
                               path: path,
                               headers: {
                                 "Accept": "application/vnd.github+json",
