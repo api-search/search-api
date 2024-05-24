@@ -135,48 +135,15 @@ exports.handler = vandium.generic()
 
                     //console.log(url.hostname); // => 'example.com'
 
-                    // Check from github
-                    var path = headers.location;       
-                    const options = {
-                        hostname: url.hostname,
-                        method: 'PUT',
-                        path: url.path,
-                        headers: {
-                          "Accept": "application/vnd.github+json",
-                          "User-Agent": "apis-io-search",
-                          "X-GitHub-Api-Version": "2022-11-28",
-                          "Authorization": 'Bearer ' + process.env.gtoken
-                      }
-                    };
-      
-                    //console.log(options);
-      
-                    var req = https.request(options, (res) => {
-      
-                        let body2 = '';
-                        var headers = res.headers;
-                        var status = res.statusCode;
-                        res.on('data', (chunk) => {
-                          body2 += chunk;
-                        });
-            
-                        res.on('end', () => {  
-                          
-                        });
-
-                        res.on('error', () => {
-      
-                          var response = {};
-                          response['pulling'] = "Error writing to GitHub.";            
-                          callback( null, response );  
-                          connection.end();
-      
-                        });                          
-
-                    });            
+                    // Publish to Github  
+                    var response = {};
+                    response['response'] = "It has been published to Artisanal! 123";            
+                    response['path'] = url.hostname;
+                    response['pathname'] = url.pathname;                            
 
                   }
                   else{
+
                     // Publish to Github  
                     var response = {};
                     response['response'] = "It has been published to Artisanal! 123";            
