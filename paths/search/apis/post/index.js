@@ -146,6 +146,8 @@ exports.handler = vandium.generic()
                         // Publish to Github  
                         var response = {};
                         response['response'] = "It has been published to Artisanal!";            
+                        response['path'] = path;
+                        response['options'] = options;
                         callback( null, response );                          
 
                         });
