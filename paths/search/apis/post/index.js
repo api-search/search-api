@@ -124,7 +124,7 @@ exports.handler = vandium.generic()
 
                     // Check from github
                     var path = '/repos/api-search/artisanal/contents/_apis/' + api_slug + '/apis.md';          
-                    const options = {
+                    const options2 = {
                         hostname: 'api.github.com',
                         method: 'PUT',
                         path: path,
@@ -136,9 +136,9 @@ exports.handler = vandium.generic()
                       }
                     };
 
-                    //console.log(options);
+                    //console.log(options2);
 
-                    var req = https.request(options, (res) => {
+                    var req = https.request(options2, (res) => {
 
                         let body = '';
                         res.on('data', (chunk) => {
@@ -149,9 +149,10 @@ exports.handler = vandium.generic()
 
                         // Publish to Github  
                         var response = {};
-                        response['response'] = "It has been published to Artisanal!!!!";            
+                        response['response'] = "It has been published to Artisanal! 123";            
                         response['path'] = path;
                         response['options'] = options;
+                        response['options2'] = options2;
                         response['body'] = body;                        
                         callback( null, response );                          
 
