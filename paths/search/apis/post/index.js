@@ -159,7 +159,7 @@ exports.handler = vandium.generic()
 
                           // Check from github
                           var path = '/repos/apis-json/artisanal/issues';          
-                          const options = {
+                          const options_issues = {
                               hostname: 'api.github.com',
                               method: 'PUT',
                               path: path,
@@ -171,25 +171,25 @@ exports.handler = vandium.generic()
                             }
                           };
       
-                          //console.log(options);
+                          //console.log(options_issues);
       
-                          var req = https.request(options, (res) => {
+                          var req = https.request(options_issues, (res) => {
       
-                              let body = '';
+                              let body_issues = '';
                               res.on('data', (chunk) => {
-                                  body += chunk;
+                                body_issues += chunk;
                               });
                   
                               res.on('end', () => {
 
-                              var issue = JSON.parse(body);
+                              var issue = JSON.parse(body_issues);
       
                               // Publish to Github  
                               var response = {};
                               response['response'] = "The API has been added to the APIs.io index.";            
                               response['url'] = 'https://github.com/apis-json/artisanal/tree/main/_apis/' + api_slug + '/apis.md?plain=1'; 
-                              response['options'] = 'https://github.com/apis-json/artisanal/issues/' + issue.id;                      
-                              response['body'] = body;
+                              response['issue'] = 'https://github.com/apis-json/artisanal/issues/' + issue.id;                      
+                              response['body'] = body_issues;
                               response['issue'] = issue;
                               callback( null, response );                          
       
