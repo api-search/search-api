@@ -135,16 +135,53 @@ exports.handler = vandium.generic()
 
                     //console.log(url.hostname); // => 'example.com'
 
-                    // Publish to Github  
-                    var response = {};
-                    response['response'] = "It has been published to Artisanal! 123";            
-                    response['path'] = url.hostname;
-                    response['pathname'] = url.pathname; 
-                    callback( null, response );                                     
+                    // Check from github
+                    var path = headers.location;       
+                    const options3 = {
+                        hostname: url.hostname,
+                        method: 'PUT',
+                        path: url.pathname,
+                        headers: {
+                          "Accept": "application/vnd.github+json",
+                          "User-Agent": "apis-io-search",
+                          "X-GitHub-Api-Version": "2022-11-28",
+                          "Authorization": 'Bearer ' + process.env.gtoken
+                      }
+                    };
+      
+                    //console.log(options3);
+      
+                    var req = https.request(options3, (res) => {
+      
+                        let body3 = '';
+                        var headers = res.headers;
+                        var status = res.statusCode;
+                        res.on('data', (chunk) => {
+                          body3 += chunk;
+                        });
+            
+                        res.on('end', () => {  
+                          
+                        });
+
+                        res.on('error', () => {
+      
+                          // Publish to Github  
+                          var response = {};
+                          response['response'] = "It has been published to Artisanal! 123";            
+                          response['options'] = options3;
+                          response['body'] = body3;  
+                          response['headers'] = headers.location;
+                          response['status'] = status;
+                          callback( null, response ); 
+      
+                        });                          
+
+                    });            
 
                   }
                   else{
-
+                    
                     // Publish to Github  
                     var response = {};
                     response['response'] = "It has been published to Artisanal! 123";            
