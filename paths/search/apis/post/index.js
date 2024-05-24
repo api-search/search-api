@@ -87,6 +87,7 @@ exports.handler = vandium.generic()
                   headers: {
                     "Accept": "application/vnd.github+json",
                     "User-Agent": "apis-io-search",
+                    "X-GitHub-Api-Version": "2022-11-28",
                     "Authorization": 'Bearer ' + process.env.gtoken
                 }
               };
