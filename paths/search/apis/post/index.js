@@ -79,112 +79,36 @@ exports.handler = vandium.generic()
               var api_name = apisjson.name;
               var api_slug = slugify(api_name);
               
-              var path = '/repos/api-search/artisanal/contents/_apis/' + api_slug + '/apis.md';
+              var path = 'https://apis.github.com/repos/api-search/artisanal/contents/_apis/' + api_slug + '/apis.md';
+
               const options = {
-                  hostname: 'api.github.com',
-                  method: 'GET',
-                  path: path,
+                  method: 'PUT',
                   headers: {
                     "Accept": "application/vnd.github+json",
                     "User-Agent": "apis-io-search",
                     "X-GitHub-Api-Version": "2022-11-28",
-                    "Authorization": 'Bearer ' + process.env.gtoken
-                }
-              };
+                    "Authorization": 'Bearer ' + process.env.gtoken              
+                  },
+                  body: apisjson
+              };  
 
-              https.get(options, (res) => {
-
-                  var body1 = '';
-                  res.on('data', (chunk) => {
-                    body1 += chunk;
-                  });
-
-                  res.on('end', () => {
-
-                    var github_results = JSON.parse(body1);
-
-                    var sha = '';
-                    if(github_results.sha){
-                      sha = github_results.sha;
-                    }
-
-                    var api_yaml = '---\r\n' + yaml.dump(apisjson) + '---';
-
-                    var c = {};
-                    c.name = "Kin Lane";
-                    c.email = "kinlane@gmail.com";
-
-                    var m = {};
-                    m.message = 'Publishing APIs.json';
-                    m.committer = c;
-                    if(sha!=''){
-                      m.sha = sha;
-                      }
-                    m.content = btoa(api_yaml);
-
-                    // Check from github
-                    var path = '/repos/api-search/artisanal/contents/_apis/' + api_slug + '/apis.md';          
-                    const options2 = {
-                        hostname: 'api.github.com',
-                        method: 'PUT',
-                        path: path,
-                        headers: {
-                          "Accept": "application/vnd.github+json",
-                          "User-Agent": "apis-io-search",
-                          "X-GitHub-Api-Version": "2022-11-28",
-                          "Authorization": 'Bearer ' + process.env.gtoken
-                      }
-                    };
-
-                    //console.log(options2);
-
-                    var req = https.request(options2, (res) => {
-
-                        let body2 = '';
-                        res.on('data', (chunk) => {
-                          body2 += chunk;
-                        });
-            
-                        res.on('end', () => {
-
-                        // Publish to Github  
-                        var response = {};
-                        response['response'] = "It has been published to Artisanal! 123";            
-                        response['path'] = path;
-                        response['options'] = options;
-                        response['options2'] = options2;
-                        response['body1'] = body1;                        
-                        response['body2'] = body2; 
-                        callback( null, response );                          
-
-                        });
-
-                        res.on('error', () => {
-
-                          var response = {};
-                          response['pulling'] = "Error writing to GitHub.";            
-                          callback( null, response );  
+              fetch(path,options)
+                  .then(function(response) {
+                      if (!response.ok) {
+                          console.log('Error with Status Code: ' + response.status);
+                          callback( null, response.status );
                           connection.end();
+                      }
+                      response.json().then(function(data) {   
+                        var response = {};
+                        response['response'] = data;            
+                        callback( null, response );    
+                      });
+                    })
+                    .catch(function(err) {
+                        console.log('Error: ' + err);
+                });      
 
-                        });
-
-                    });
-
-                  req.write(JSON.stringify(m));
-                  req.end();   
-
-                  });              
-
-                  res.on('error', () => {
-
-                    var response = {};
-                    response['pulling'] = "Error reading from GitHub.";            
-                    callback( null, response );  
-                    connection.end();
-                  });
-
-                });                                
-                
               }
               else{
                 var response = {};
