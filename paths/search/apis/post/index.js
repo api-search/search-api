@@ -188,7 +188,7 @@ exports.handler = vandium.generic()
                               var response = {};
                               response['response'] = "The API has been added to the APIs.io index.";            
                               response['url'] = 'https://github.com/apis-json/artisanal/tree/main/_apis/' + api_slug + '/apis.md?plain=1'; 
-                              response['issue'] = 'https://github.com/apis-json/artisanal/issues/' + issue.id;                      
+                              response['issue'] = 'https://github.com/apis-json/artisanal/issues/' + issue.number;                      
                               //response['body'] = body_issues;
                               //response['options'] = options_issues;
                               //response['issue'] = issue;
