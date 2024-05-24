@@ -117,16 +117,76 @@ exports.handler = vandium.generic()
       
                   res.on('end', () => {
 
-                  // Publish to Github  
-                  var response = {};
-                  response['response'] = "It has been published to Artisanal! 123";            
-                  response['path'] = path;
-                  response['options'] = options;
-                  response['body2'] = body2;  
-                  response['headers'] = headers;
-                  response['status'] = status;
-                  callback( null, response );                          
+                  if(status == 307){
 
+
+                    var api_yaml = '---\r\n' + yaml.dump(apisjson) + '---';
+
+                    var c = {};
+                    c.name = "Kin Lane";
+                    c.email = "kinlane@gmail.com";
+      
+                    var m = {};
+                    m.message = 'Publishing APIs.json';
+                    m.committer = c;
+                    m.content = btoa(api_yaml);
+      
+                    const url = new URL(headers.location);
+
+                    //console.log(url.hostname); // => 'example.com'
+
+                    // Check from github
+                    var path = headers.location;       
+                    const options = {
+                        hostname: url.hostname,
+                        method: 'PUT',
+                        path: url.path,
+                        headers: {
+                          "Accept": "application/vnd.github+json",
+                          "User-Agent": "apis-io-search",
+                          "X-GitHub-Api-Version": "2022-11-28",
+                          "Authorization": 'Bearer ' + process.env.gtoken
+                      }
+                    };
+      
+                    //console.log(options);
+      
+                    var req = https.request(options, (res) => {
+      
+                        let body2 = '';
+                        var headers = res.headers;
+                        var status = res.statusCode;
+                        res.on('data', (chunk) => {
+                          body2 += chunk;
+                        });
+            
+                        res.on('end', () => {  
+                          
+                        });
+
+                        res.on('error', () => {
+      
+                          var response = {};
+                          response['pulling'] = "Error writing to GitHub.";            
+                          callback( null, response );  
+                          connection.end();
+      
+                        });                          
+
+                    });            
+
+                  }
+                  else{
+                    // Publish to Github  
+                    var response = {};
+                    response['response'] = "It has been published to Artisanal! 123";            
+                    response['path'] = path;
+                    response['options'] = options;
+                    response['body2'] = body2;  
+                    response['headers'] = headers.location;
+                    response['status'] = status;
+                    callback( null, response );                          
+                    }
                   });
 
                   res.on('error', () => {
