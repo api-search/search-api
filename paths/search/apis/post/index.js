@@ -117,8 +117,10 @@ exports.handler = vandium.generic()
                     var m = {};
                     m.message = 'Publishing APIs.json';
                     m.committer = c;
-                    m.sha = sha;
-                    m.content = btoa(unescape(encodeURIComponent(api_yaml)));
+                    if(sha!=''){
+                      m.sha = sha;
+                      }
+                    m.content = btoa(api_yaml);
 
                     // Check from github
                     var path = '/repos/api-search/artisanal/contents/_apis/' + api_slug + '/apis.md';          
@@ -147,7 +149,7 @@ exports.handler = vandium.generic()
 
                         // Publish to Github  
                         var response = {};
-                        response['response'] = "It has been published to Artisanal!";            
+                        response['response'] = "It has been published to Artisanal!!!!";            
                         response['path'] = path;
                         response['options'] = options;
                         response['body'] = body;                        
