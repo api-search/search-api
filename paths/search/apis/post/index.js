@@ -78,6 +78,9 @@ exports.handler = vandium.generic()
 
               var api_name = apisjson.name;
               var api_slug = slugify(api_name);
+
+              apisjson.created = created;
+              apisjson.modified = created;
               
               var path = '/repos/apis-json/artisanal/contents/_apis/' + api_slug + '/apis.md';
               const options = {
@@ -147,13 +150,64 @@ exports.handler = vandium.generic()
             
                         res.on('end', () => {
 
-                        // Publish to Github  
-                        var response = {};
-                        response['response'] = "It has been published to Artisanal!!!!";            
-                        response['path'] = path;
-                        response['options'] = options;
-                        response['body'] = body;                        
-                        callback( null, response );                          
+                          // Success - Issue
+                          var m = {};
+                          m.title = api_name;
+                          m.body = 'This is an issue submitted when ' + api_name + ' was added to the APIs.io search submission form or via the API, and can be used to engage with the platform and community around the listing in the index.';
+                          m.assignees = ['kinlane'];
+                          m.labels = ['new'];
+
+                          // Check from github
+                          var path = '/repos/apis-json/artisanal/issues';          
+                          const options = {
+                              hostname: 'api.github.com',
+                              method: 'PUT',
+                              path: path,
+                              headers: {
+                                "Accept": "application/vnd.github+json",
+                                "User-Agent": "apis-io-search",
+                                "X-GitHub-Api-Version": "2022-11-28",
+                                "Authorization": 'Bearer ' + process.env.gtoken
+                            }
+                          };
+      
+                          //console.log(options);
+      
+                          var req = https.request(options, (res) => {
+      
+                              let body = '';
+                              res.on('data', (chunk) => {
+                                  body += chunk;
+                              });
+                  
+                              res.on('end', () => {
+
+                              var issue = JSON.parse(body);
+      
+                              // Publish to Github  
+                              var response = {};
+                              response['response'] = "The API has been added to the APIs.io index.";            
+                              response['url'] = 'https://github.com/apis-json/artisanal/tree/main/_apis/' + api_slug + '/apis.md'; 
+                              response['options'] = 'https://github.com/apis-json/artisanal/issues/' + issue.id;                      
+                              callback( null, response );                          
+      
+                              });
+      
+                              res.on('error', () => {
+      
+                                var response = {};
+                                response['pulling'] = "Error writing to GitHub.";            
+                                callback( null, response );  
+                                connection.end();
+      
+                              });
+      
+                          });
+        
+                          req.write(JSON.stringify(m));
+                          req.end();                           
+
+                        // Success - Issue                                                 
 
                         });
 
