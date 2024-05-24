@@ -109,6 +109,7 @@ exports.handler = vandium.generic()
               var req = https.request(options, (res) => {
 
                   let body2 = '';
+                  headers = res.headers;
                   res.on('data', (chunk) => {
                     body2 += chunk;
                   });
@@ -121,6 +122,7 @@ exports.handler = vandium.generic()
                   response['path'] = path;
                   response['options'] = options;
                   response['body2'] = body2;  
+                  response['headers'] = headers;
                   callback( null, response );                          
 
                   });
