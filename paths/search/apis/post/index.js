@@ -124,7 +124,7 @@ exports.handler = vandium.generic()
                   response['options'] = options;
                   response['body2'] = body2;  
                   response['headers'] = headers;
-                  response['status'] = headers;
+                  response['status'] = status;
                   callback( null, response );                          
 
                   });
