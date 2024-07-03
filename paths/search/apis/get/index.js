@@ -46,7 +46,7 @@ exports.handler = vandium.generic()
           
         const api_count = results1[0].api_count;
       
-        let sql2 = "select * FROM apis WHERE a.id IS NOT NULL" + sql_search + " GROUP BY a.name LIMIT " + page + "," + limit;
+        let sql2 = "select * FROM apis a WHERE a.id IS NOT NULL" + sql_search + " GROUP BY a.name LIMIT " + page + "," + limit;
 
         connection.query(sql2, function (error, results2, fields) {
     
