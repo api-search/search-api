@@ -70,8 +70,8 @@ exports.handler = vandium.generic()
             meta.search = search;
             meta.limit = limit;
             meta.page = page;
-            meta.sql = sql;
-            meta.sql2 = sql2;
+            //meta.sql = sql;
+            //meta.sql2 = sql2;
             meta.totalPages = total_pages;
             
             let links = {};
@@ -110,8 +110,8 @@ exports.handler = vandium.generic()
             var sql = "INSERT INTO searches(search,api_count) VALUES(" + connection.escape(search) + "," + api_count + ")";
 
             var response = {};
-            response.sql = sql;
-            response.sql2 = sql2;
+            //response.sql = sql;
+            //response.sql2 = sql2;
             response.meta = meta;
             response.data = data;
             response.links = links;            
