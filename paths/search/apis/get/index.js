@@ -38,78 +38,111 @@ exports.handler = vandium.generic()
       sql_search += " OR a.tags LIKE '%" + search + "%')";
     }
 
-    sql_search += " ORDER BY score DESC, name ASC";
     sql = sql + sql_search;
     
-    connection.query(sql, function (error, results, fields) { 
-  
-      if(error){
+    connection.query(sql, function (error, results1, fields) { 
+      
+      if(results1[0]){
+          
+        const api_count = results1[0].api_count;
+      
+        let sql2 = "select * FROM apis WHERE a.id IS NOT NULL" + sql_search + " GROUP BY a.name LIMIT " + page + "," + limit;
 
-        let response = {};
-        response.sql = sql;
-        response.error = error;
-        
-        callback( null, response );
+        connection.query(sql2, function (error, results2, fields) {
+    
+          if(error){
+
+            let response = {};
+            response.sql = sql;
+            response.sql2 = sql2;
+            response.error = error;
+            
+            callback( null, response );
+
+          }
+          else{
+
+            let total_pages = api_count/limit;
+            if(total_pages<1){ total_pages = 0; }
+            total_pages = Math.round(total_pages);
+            
+            let meta = {};
+            meta.search = search;
+            meta.limit = limit;
+            meta.page = page;
+            meta.sql = sql;
+            meta.sql2 = sql2;
+            meta.totalPages = total_pages;
+            
+            let links = {};
+            links.self = '/search/apis/?search=' + search + '&page=' + page + '&limit=' + limit;
+            if(page!=0){
+              links.first = '/search/apis/?search=' + search + '&page=-0&limit=' + limit;
+              links.prev = '/search/apis/?search=' + search + '&page=' + page-1 + '&limit=' + limit;
+            }
+            
+            if(total_pages > 1){
+              links.next = '/search/apis/?search=' + search + '&page=' + page+1 + '&limit=' + limit;
+            }
+            links.last = '/search/apis/?search=' + search + '&page=' + total_pages + '&limit=' + limit;
+      
+            let data = [];
+            for (let i = 0; i < results2.length; i++) {
+            
+              let d = {};
+              d.name = results2[i].name;
+              d.score = results2[i].score;
+              d.description = results2[i].description;
+              //d.image = results2[i].image;
+              d.humanURL = results2[i].humanURL;
+              d.apisjson_url = results2[i].apisjson_url;
+
+              if(results2[i].tags){
+                d.tags = results2[i].tags.split(",");
+              }
+              else{
+                d.tags = "";
+              }
+              data.push(d);
+              
+            }
+
+            var sql = "INSERT INTO searches(search,api_count) VALUES(" + connection.escape(search) + "," + api_count + ")";
+
+            var response = {};
+            response.sql = sql;
+            response.sql2 = sql2;
+            response.meta = meta;
+            response.data = data;
+            response.links = links;            
+
+            connection.query(sql, function (error, results1, fields) {             
+            
+              callback( null, response );
+
+            });
+
+          }  
+
+        });
 
       }
       else{
 
-        let total_pages = api_count/limit;
-        if(total_pages<1){ total_pages = 0; }
-        total_pages = Math.round(total_pages);
-        
         let meta = {};
         meta.search = search;
-        meta.limit = limit;
-        meta.page = page;
-        meta.sql = sql;
-        meta.totalPages = total_pages;
-        
-        let links = {};
-        links.self = '/search/apis/?search=' + search + '&page=' + page + '&limit=' + limit;
-        if(page!=0){
-          links.first = '/search/apis/?search=' + search + '&page=-0&limit=' + limit;
-          links.prev = '/search/apis/?search=' + search + '&page=' + page-1 + '&limit=' + limit;
-        }
-        
-        if(total_pages > 1){
-          links.next = '/search/apis/?search=' + search + '&page=' + page+1 + '&limit=' + limit;
-        }
-        links.last = '/search/apis/?search=' + search + '&page=' + total_pages + '&limit=' + limit;
-  
-        let data = [];
-        for (let i = 0; i < results.length; i++) {
-        
-          let d = {};
-          d.name = results[i].name;
-          d.score = results[i].score;
-          d.description = results[i].description;
-          if(results[i].tags){
-            d.tags = results[i].tags.split(",");
-          }
-          else{
-            d.tags = "";
-          }
-
-          data.push(d);
-          
-        }
-
-        var sql = "INSERT INTO searches(search,api_count) VALUES(" + connection.escape(search) + "," + api_count + ")";
+        meta.limit = 0;
+        meta.page = 0;
+        meta.totalPages = 0;
 
         var response = {};
-        response.sql = sql;
         response.meta = meta;
-        response.data = data;
-        response.links = links;            
-
-        connection.query(sql, function (error, results, fields) {             
+        response.data = [];
+        response.links = {};        
         
-          callback( null, response );
-
-        });
-
-      }  
+        callback( null, response );        
+        
+      }
 
     });
 });
