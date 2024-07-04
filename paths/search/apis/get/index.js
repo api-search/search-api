@@ -29,18 +29,18 @@ exports.handler = vandium.generic()
       limit = 1000;
     }
 
-    var sql = "SELECT count(*) as api_count FROM apis a WHERE a.id IS NOT NULL";
+    var sql1 = "SELECT count(*) as api_count FROM apis a WHERE a.id IS NOT NULL";
     
     var sql_search = '';
     if(search != ''){
       sql_search = " AND (a.name LIKE '%" + search + "%'";
-      sql_search += " OR a.description LIKE '%" + search + "%'";
+      //sql_search += " OR a.description LIKE '%" + search + "%'";
       sql_search += " OR a.tags LIKE '%" + search + "%')";
     }
 
-    sql = sql + sql_search;
+    sql1 = sql1 + sql_search;
     
-    connection.query(sql, function (error, results1, fields) { 
+    connection.query(sql1, function (error, results1, fields) { 
       
       if(results1[0]){
           
@@ -53,7 +53,7 @@ exports.handler = vandium.generic()
           if(error){
 
             let response = {};
-            response.sql = sql;
+            response.sql1 = sql1;
             response.sql2 = sql2;
             response.error = error;
             
@@ -70,7 +70,7 @@ exports.handler = vandium.generic()
             meta.search = search;
             meta.limit = limit;
             meta.page = page;
-            //meta.sql = sql;
+            //meta.sql1 = sql1;
             //meta.sql2 = sql2;
             meta.totalPages = total_pages;
             
@@ -107,16 +107,17 @@ exports.handler = vandium.generic()
               
             }
 
-            var sql = "INSERT INTO searches(search,api_count) VALUES(" + connection.escape(search) + "," + api_count + ")";
+            var sql3 = "INSERT INTO searches(search,api_count) VALUES(" + connection.escape(search) + "," + api_count + ")";
 
             var response = {};
-            //response.sql = sql;
-            //response.sql2 = sql2;
+            response.sql1 = sql1;
+            response.sql2 = sql2;
+            response.sql3 = sql3;
             response.meta = meta;
             response.data = data;
             response.links = links;            
 
-            connection.query(sql, function (error, results1, fields) {             
+            connection.query(sql3, function (error, results1, fields) {             
             
               callback( null, response );
 
