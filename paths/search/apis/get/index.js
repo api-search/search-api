@@ -110,9 +110,9 @@ exports.handler = vandium.generic()
             var sql3 = "INSERT INTO searches(search,api_count) VALUES(" + connection.escape(search) + "," + api_count + ")";
 
             var response = {};
-            response.sql1 = sql1;
-            response.sql2 = sql2;
-            response.sql3 = sql3;
+            //response.sql1 = sql1;
+            //response.sql2 = sql2;
+            //response.sql3 = sql3;
             response.meta = meta;
             response.data = data;
             response.links = links;            
